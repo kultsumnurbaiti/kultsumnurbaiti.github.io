@@ -1,0 +1,2407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Prophetic History Crossword — Desert Night — Built with late-night motivation and a heart full of īmān
+</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ---------------- Desert Night Theme (lightweight) ---------------- */
+  :root{
+    --sky-top: #07122b;     /* deep navy */
+    --sky-mid: #0b2340;
+    --sky-bottom: #15324a;
+    --dune1: #1e2a2f;       /* dark dunes (night silhouettes) */
+    --dune2: #262f33;
+    --panel: rgba(255,255,255,0.02);
+    --card: #0f1720;
+    --accent: #d9b56b;      /* warm desert highlight */
+    --accent-2: #c89b40;
+    --muted: #cfd8df;
+    --input: #f4f7f8;
+    --correct: #c8f7c8;     /* green background */
+    --wrong: #ffcdcd;       /* red background */
+    --highlight: rgba(248,227,175,0.08);
+    --clue-active: rgba(248,227,175,0.12);
+    
+    /* Day mode variables */
+    --day-sky-top: #4a90e2;
+    --day-sky-mid: #6ba8e8;
+    --day-sky-bottom: #8fc1ff;
+    --day-dune1: #d4a55c;
+    --day-dune2: #e6b85c;
+    --day-accent: #2c3e50;
+  }
+
+  *{box-sizing:border-box}
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:'Cairo', system-ui, sans-serif;
+    color:var(--muted);
+    background:var(--sky-top);
+    overflow-x:hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  body{
+    /* night sky gradient */
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-bottom) 85%);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    position:relative;
+    width: 100%;
+    transition: background 15s linear;
+  }
+
+  body.day-mode {
+    background: linear-gradient(180deg, var(--day-sky-top) 0%, var(--day-sky-mid) 45%, var(--day-sky-bottom) 85%);
+  }
+
+  /* ---------- stars (many small dots) ---------- */
+  .stars {
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1px 1px at 5% 8%, rgba(255,255,255,0.9) 50%, transparent 51%),
+      radial-gradient(1px 1px at 15% 22%, rgba(255,255,255,0.8) 50%, transparent 51%),
+      radial-gradient(1px 1px at 25% 4%, rgba(255,255,255,0.85) 50%, transparent 51%),
+      radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,0.75) 50%, transparent 51%),
+      radial-gradient(1px 1px at 45% 25%, rgba(255,255,255,0.8) 50%, transparent 51%),
+      radial-gradient(1px 1px at 55% 12%, rgba(255,255,255,0.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 65% 30%, rgba(255,255,255,0.9) 50%, transparent 51%),
+      radial-gradient(1px 1px at 75% 8%, rgba(255,255,255,0.8) 50%, transparent 51%),
+      radial-gradient(1px 1px at 85% 20%, rgba(255,255,255,0.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 95% 5%, rgba(255,255,255,0.85) 50%, transparent 51%),
+      radial-gradient(1px 1px at 10% 35%, rgba(255,255,255,0.8) 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 50% 45%, rgba(255,255,255,0.85) 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 38%, rgba(255,255,255,0.9) 50%, transparent 51%),
+      radial-gradient(1px 1px at 90% 42%, rgba(255,255,255,0.8) 50%, transparent 51%);
+    opacity:0.95;
+    filter: drop-shadow(0 0 1px rgba(255,255,255,0.02));
+    transition: opacity 15s linear;
+  }
+  
+  body.day-mode .stars {
+    opacity: 0;
+  }
+
+  /* More twinkle stars */
+  .twinkle {
+    position:fixed; width:6px; height:6px; background:rgba(255,255,255,0.85); border-radius:50%; z-index:1;
+    animation:twinkle 3.6s ease-in-out infinite;
+    opacity:0.95; pointer-events:none;
+    transition: opacity 15s linear;
+  }
+  
+  body.day-mode .twinkle {
+    opacity: 0;
+  }
+
+  .twinkle.t1{ left:12%; top:10%; }
+  .twinkle.t2{ left:64%; top:20%; animation-delay:1s; width:4px; height:4px; }
+  .twinkle.t3{ left:36%; top:6%; animation-delay:0.4s; width:5px; height:5px; }
+  .twinkle.t4{ left:25%; top:25%; animation-delay:0.8s; width:3px; height:3px; }
+  .twinkle.t5{ left:80%; top:15%; animation-delay:1.2s; width:4px; height:4px; }
+  .twinkle.t6{ left:45%; top:30%; animation-delay:0.2s; width:5px; height:5px; }
+  .twinkle.t7{ left:70%; top:8%; animation-delay:1.5s; width:3px; height:3px; }
+  .twinkle.t8{ left:15%; top:40%; animation-delay:0.6s; width:4px; height:4px; }
+  
+  @keyframes twinkle { 
+    0%{ transform:scale(1); opacity:0.8 } 
+    50%{ transform:scale(1.6); opacity:1 } 
+    100%{ transform:scale(1); opacity:0.8 } 
+  }
+
+  /* Shooting star */
+  .shooting-star {
+    position: fixed;
+    top: 0;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 8px white, 0 0 16px rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Day sun */
+  .sun {
+    position: fixed;
+    top: 8%;
+    right: 10%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffdd00 0%, #ff9500 100%);
+    box-shadow: 0 0 60px 30px rgba(255, 221, 0, 0.4);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 15s linear;
+  }
+  
+  body.day-mode .sun {
+    opacity: 1;
+  }
+
+  /* moon */
+  .moon {
+    position:fixed; top:6%; right:12%; width:90px; height:90px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #f6f3db 35%, #e6d6a2 65%, rgba(230,210,150,0.9) 100%);
+    box-shadow: 0 12px 40px rgba(230,200,120,0.08);
+    z-index:0; pointer-events:none; opacity:0.95;
+    transition: opacity 15s linear;
+  }
+  
+  body.day-mode .moon {
+    opacity: 0;
+  }
+
+  /* Day clouds */
+  .day-cloud {
+    position: fixed;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 15s linear;
+  }
+  
+  body.day-mode .day-cloud {
+    opacity: 0.9;
+  }
+  
+  .day-cloud-1 {
+    width: 120px;
+    height: 40px;
+    top: 15%;
+    left: 10%;
+    box-shadow: 
+      20px 0 0 0 white,
+      40px 0 0 0 white,
+      60px 0 0 0 white,
+      80px 0 0 0 white;
+    animation: cloud-float 80s infinite linear;
+  }
+  
+  .day-cloud-2 {
+    width: 100px;
+    height: 35px;
+    top: 25%;
+    left: 40%;
+    box-shadow: 
+      20px 0 0 0 white,
+      40px 0 0 0 white,
+      60px 0 0 0 white;
+    animation: cloud-float 100s infinite linear;
+    animation-delay: 20s;
+  }
+  
+  .day-cloud-3 {
+    width: 80px;
+    height: 30px;
+    top: 20%;
+    left: 70%;
+    box-shadow: 
+      20px 0 0 0 white,
+      40px 0 0 0 white;
+    animation: cloud-float 120s infinite linear;
+    animation-delay: 40s;
+  }
+  
+  @keyframes cloud-float {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(calc(100vw + 200px)); }
+  }
+
+  /* More moving clouds */
+  .cloud {
+    position:fixed; top:18%; left:-20%; width:380px; height:120px; pointer-events:none; z-index:0; opacity:0.12;
+    background:
+      radial-gradient(60px 36px at 20% 50%, rgba(255,255,255,0.18), transparent 60%),
+      radial-gradient(80px 44px at 40% 50%, rgba(255,255,255,0.12), transparent 60%),
+      radial-gradient(52px 30px at 60% 50%, rgba(255,255,255,0.16), transparent 60%);
+    animation:cloud-move 36s linear infinite;
+    transform: translateZ(0);
+  }
+  .cloud.c2{ top:8%; left:-40%; width:460px; height:140px; opacity:0.09; animation-duration:52s; }
+  .cloud.c3{ top:25%; left:-30%; width:320px; height:100px; opacity:0.1; animation-duration:45s; animation-delay: 5s; }
+  .cloud.c4{ top:12%; left:-50%; width:400px; height:130px; opacity:0.08; animation-duration:60s; animation-delay: 10s; }
+  
+  @keyframes cloud-move { 
+    0%{ transform: translateX(-10%) } 
+    100%{ transform: translateX(150%) } 
+  }
+
+  /* dunes layers at bottom */
+  .dune1{ 
+    position:fixed; bottom:-6%; left:-10%; width:120%; height:42%; 
+    background: radial-gradient(ellipse at 20% 80%, rgba(40,34,35,0.92) 0%, rgba(30,26,27,0.92) 55%, rgba(24,20,21,0.96) 100%);
+    z-index:0; transform:rotate(-2deg); pointer-events:none; opacity:0.95;
+    transition: background 15s linear;
+  }
+  
+  body.day-mode .dune1 {
+    background: radial-gradient(ellipse at 20% 80%, var(--day-dune1) 0%, #c1954e 55%, #a87c3a 100%);
+  }
+  
+  .dune2{ 
+    position:fixed; bottom:-2%; left:-6%; width:120%; height:38%; 
+    background: radial-gradient(ellipse at 70% 100%, rgba(38,34,33,0.88) 0%, rgba(26,22,23,0.92) 60%);
+    z-index:0; transform:rotate(1.2deg); pointer-events:none; opacity:0.9;
+    transition: background 15s linear;
+  }
+  
+  body.day-mode .dune2 {
+    background: radial-gradient(ellipse at 70% 100%, var(--day-dune2) 0%, #d4a55c 60%);
+  }
+
+  /* Improved Desert Houses */
+  .desert-house {
+    position: fixed;
+    bottom: 8%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .house-container {
+    position: relative;
+  }
+  
+  .house-body {
+    width: 36px;
+    height: 28px;
+    background: linear-gradient(to bottom, #8b4513 0%, #5a3921 100%);
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    border: 1px solid rgba(90, 57, 33, 0.8);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .house-roof {
+    width: 44px;
+    height: 12px;
+    background: linear-gradient(to bottom, #654321 0%, #3a2a1a 100%);
+    border-radius: 3px 3px 0 0;
+    position: absolute;
+    top: -8px;
+    left: -4px;
+    border-bottom: 1px solid rgba(58, 42, 26, 0.8);
+  }
+  
+  .house-window {
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, #ffec8b 0%, #ffd700 70%);
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 13px;
+    box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.8);
+    animation: window-flicker 4s infinite alternate;
+  }
+  
+  .house-door {
+    width: 8px;
+    height: 12px;
+    background: linear-gradient(to right, #3a2a1a 0%, #2a1a0a 100%);
+    border-radius: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    border-right: 1px solid rgba(58, 42, 26, 0.8);
+  }
+  
+  .house-chimney {
+    width: 6px;
+    height: 10px;
+    background: #5a3921;
+    position: absolute;
+    top: -18px;
+    left: 10px;
+    border-radius: 1px 1px 0 0;
+  }
+  
+  .house-light {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(ellipse at center, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0) 70%);
+    top: 2px;
+    left: 3px;
+    border-radius: 50%;
+    z-index: -1;
+    animation: light-pulse 4s infinite alternate;
+  }
+  
+  /* House positions */
+  .house-1 { left: 8%; bottom: 9%; transform: scale(0.9); }
+  .house-2 { left: 18%; bottom: 11%; transform: scale(1.1); }
+  .house-3 { left: 28%; bottom: 8%; transform: scale(0.95); }
+  .house-4 { left: 38%; bottom: 12%; transform: scale(1.05); }
+  .house-5 { left: 48%; bottom: 9%; transform: scale(0.85); }
+  .house-6 { left: 58%; bottom: 11%; transform: scale(1.15); }
+  .house-7 { left: 68%; bottom: 8%; transform: scale(0.9); }
+  .house-8 { left: 78%; bottom: 12%; transform: scale(1); }
+  .house-9 { left: 88%; bottom: 9%; transform: scale(0.95); }
+  
+  @keyframes window-flicker {
+    0%, 100% { 
+      opacity: 1; 
+      box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.8); 
+    }
+    30% { 
+      opacity: 0.7; 
+      box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.6); 
+    }
+    60% { 
+      opacity: 0.9; 
+      box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7); 
+    }
+  }
+  
+  @keyframes light-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
+  }
+
+  /* app container - Centered */
+  .app { 
+    position:relative; 
+    z-index:2; 
+    width:90%;
+    max-width:1000px; 
+    margin: auto;
+    border-radius:12px; 
+    background: linear-gradient(180deg, rgba(7,15,20,0.85), rgba(2,6,8,0.75)); 
+    border:1px solid rgba(255,255,255,0.12); 
+    overflow:hidden; 
+    box-shadow:0 8px 40px rgba(0,0,0,0.8);
+    transform: translateY(0);
+    backdrop-filter: blur(3px);
+  }
+
+  /* Title animation */
+  .title {
+    font-size:22px;
+    font-weight:900;
+    color:var(--accent);
+    margin:0;
+    position: relative;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    letter-spacing: 0.5px;
+  }
+  
+  .byline{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:2px;
+    opacity: 0.9;
+  }
+
+  /* Enhanced header - no gap */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    background:rgba(7,15,20,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* fade transitions between panels */
+  .panel { 
+    transition:opacity .36s ease, transform .36s ease; 
+  }
+  
+  .fade-in { 
+    opacity:1; 
+    transform:none; 
+    pointer-events:auto; 
+  }
+  
+  .fade-out { 
+    opacity:0; 
+    transform:translateY(10px); 
+    pointer-events:none; 
+  }
+
+  /* hero - no extra gap */
+  .hero{
+    background:rgba(7,15,20,0.4);
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    position:relative;
+    overflow:visible;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .hero .left{
+    flex:1
+  }
+  
+  .hero .text-title{
+    font-weight:800;
+    color:var(--accent);
+    font-size:16px;
+    margin-bottom: 4px;
+  }
+  
+  .hero .text-sub{
+    font-size:13px;
+    color:var(--muted);
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  /* main content */
+  .content{
+    display:flex;
+    gap:12px;
+    padding:18px;
+    align-items:flex-start
+  }
+  
+  .left{
+    flex:1.4;
+    background:rgba(255,255,255,0.05);
+    padding:16px;
+    border-radius:8px; 
+    border:1px solid rgba(255,255,255,0.08); 
+  }
+  
+  .right{
+    flex:0.8;
+    background:rgba(255,255,255,0.05);
+    padding:16px;
+    border-radius:8px;
+    min-width:240px; 
+    border:1px solid rgba(255,255,255,0.08);
+  }
+
+  #grid{
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03)); 
+    padding:10px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.08); 
+    overflow:auto;
+    transition: transform 0.3s ease;
+  }
+  
+  .row{
+    display:flex
+  }
+  
+  .cell{
+    width:42px;
+    height:42px;
+    border:1px solid rgba(255,255,255,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.15);
+    position:relative
+  }
+  
+  .cell.empty{
+    background:transparent;
+    border:1px solid transparent
+  }
+  
+  .cell input{
+    width:100%;
+    height:100%;
+    border:0;
+    outline:0;
+    text-align:center;
+    font-weight:800;
+    color:var(--input);
+    font-size:18px;
+    text-transform:uppercase;
+    background:rgba(255,255,255,0.08);
+    border-radius: 4px;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.2s ease;
+  }
+  
+  .cell input:hover {
+    background:rgba(255,255,255,0.12);
+  }
+  
+  .cell .num{
+    position:absolute;
+    left:6px;
+    top:4px;
+    font-size:10px;
+    color:var(--muted);
+    font-weight: 700;
+  }
+  
+  .cell.highlight{
+    background:var(--highlight);
+    border-color: rgba(217, 181, 107, 0.4);
+    box-shadow: inset 0 0 8px rgba(217, 181, 107, 0.1);
+  }
+  
+  .cell.first-cell{
+    box-shadow:inset 0 0 0 2px rgba(200,150,80,0.35);
+    border-radius:4px
+  }
+
+  /* per-letter result classes */
+  .cell.correct input { 
+    background: var(--correct); 
+    color:#064b05; 
+    border-radius:4px; 
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+  }
+  
+  .cell.wrong input { 
+    background: var(--wrong); 
+    color:#4b0a0a; 
+    border-radius:4px; 
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+  }
+
+  /* Clues with glowing border */
+  .clue-list li.active {
+    background: var(--clue-active);
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(217, 181, 107, 0.4), 0 0 15px rgba(217, 181, 107, 0.25);
+    animation: glow-pulse 2s infinite;
+    transform: translateX(4px);
+    transition: all 0.3s ease;
+  }
+  
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 0 1px rgba(217, 181, 107, 0.4), 0 0 15px rgba(217, 181, 107, 0.25); }
+    50% { box-shadow: 0 0 0 1px rgba(217, 181, 107, 0.5), 0 0 20px rgba(217, 181, 107, 0.35); }
+  }
+
+  .clues-title{
+    font-weight:800;
+    color:var(--accent);
+    margin-bottom:12px;
+    font-size:16px;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .clue-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    max-height:480px;
+    overflow:auto
+  }
+  
+  .clue-list li{
+    padding:10px 12px;
+    border-radius:8px;
+    font-size:13px;
+    color:var(--muted);
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    transition: all 0.3s ease;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  
+  .clue-list li:hover:not(.active) {
+    background: rgba(255,255,255,0.03);
+    transform: translateX(2px);
+  }
+  
+  .clue-list li.dim{
+    opacity:0.5
+  }
+  
+  .clue-num{
+    min-width:36px;
+    font-weight:800;
+    color:var(--accent-2);
+    font-size: 14px;
+    padding-top: 1px;
+  }
+
+  /* Separate Across and Down sections */
+  .clue-section {
+    margin-bottom: 20px;
+  }
+  
+  .clue-section:last-child {
+    margin-bottom: 0;
+  }
+  
+  .clue-section-title {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    letter-spacing: 0.5px;
+  }
+
+  .controls{
+    margin-top:16px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap
+  }
+  
+  .btn{
+    padding:10px 16px;
+    border-radius:8px;
+    border:0;
+    cursor:pointer;
+    font-weight:700;
+    color:#061018;
+    background:linear-gradient(to bottom, var(--accent-2), #b08530);
+    transition: all 0.2s ease;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    min-width: 80px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+  
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .btn.secondary{
+    background:transparent;
+    color:var(--accent);
+    border:1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.03);
+  }
+  
+  .btn.secondary:hover {
+    background: rgba(217, 181, 107, 0.1);
+    border-color: rgba(217, 181, 107, 0.3);
+  }
+  
+  .feedback{
+    margin-left:8px;
+    font-weight:700;
+    color:var(--accent);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  footer{
+    padding:12px 18px;
+    text-align:right;
+    font-size:13px;
+    color:var(--muted);
+    border-top:1px solid rgba(255,255,255,0.05);
+    background:rgba(7,15,20,0.4);
+    z-index:2;
+    position: relative;
+    min-height: 44px;
+  }
+
+  /* Tip rotation */
+  .tip-container {
+    position: relative;
+    height: 22px;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .tip {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    font-style: italic;
+  }
+  
+  .tip.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mini Achievement System */
+  .achievement-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    max-width: 220px;
+    background: rgba(15, 23, 32, 0.95);
+    border: 1px solid rgba(217, 181, 107, 0.4);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+  }
+  
+  .achievement-title {
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  
+  .achievement {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    padding: 4px 0;
+  }
+  
+  .achievement.unlocked {
+    opacity: 1;
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+  
+  .achievement-check {
+    color: #2ecc71;
+    font-weight: bold;
+    font-size: 14px;
+    min-width: 16px;
+  }
+
+  /* Popup Announcement */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(15, 23, 32, 0.98);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    z-index: 1000;
+    min-width: 320px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+    animation: popupIn 0.3s ease-out;
+    backdrop-filter: blur(8px);
+  }
+  
+  .popup.correct {
+    border-color: #2ecc71;
+    background: rgba(20, 40, 20, 0.98);
+  }
+  
+  .popup.wrong {
+    border-color: #e74c3c;
+    background: rgba(40, 20, 20, 0.98);
+  }
+  
+  .popup h3 {
+    margin: 0 0 12px 0;
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: 900;
+  }
+  
+  .popup p {
+    margin: 12px 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .popup-close {
+    margin-top: 18px;
+    padding: 10px 24px;
+    background: var(--accent);
+    color: #061018;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .popup-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* Completion Popup */
+  .completion-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 40, 20, 0.98);
+    border: 2px solid #2ecc71;
+    border-radius: 12px;
+    padding: 30px;
+    z-index: 1000;
+    min-width: 400px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+    animation: popupIn 0.3s ease-out;
+    backdrop-filter: blur(8px);
+  }
+  
+  .completion-popup h3 {
+    margin: 0 0 16px 0;
+    color: #2ecc71;
+    font-size: 24px;
+    font-weight: 900;
+  }
+  
+  .completion-popup p {
+    margin: 16px 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  
+  .completion-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  
+  @keyframes popupIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  @keyframes popupOut {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+  }
+
+  /* Info Panel Enhancements */
+  .info-content {
+    padding: 18px;
+  }
+  
+  .info-section {
+    margin: 20px 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .info-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .info-section h4 {
+    color: var(--accent);
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 800;
+  }
+  
+  .info-section p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  
+  .info-section strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  @media(max-width:920px){ 
+    .content{flex-direction:column} 
+    .right{min-width:auto;width:100%} 
+    .cell{width:36px;height:36px} 
+    .cell input { font-size: 16px; }
+    .app { width: 95%; }
+    .achievement-container {
+      bottom: 10px;
+      right: 10px;
+      max-width: 200px;
+      padding: 10px;
+    }
+    .btn {
+      padding: 8px 12px;
+      font-size: 13px;
+      min-width: 70px;
+    }
+    .completion-popup {
+      min-width: 300px;
+      padding: 20px;
+    }
+  }
+
+  /* focus */
+  input:focus{ 
+    outline:2px solid rgba(200,150,80,0.4); 
+    border-radius:4px; 
+    background:rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 3px rgba(200,150,80,0.1);
+  }
+
+</style>
+</head>
+<body>
+  <!-- visual layers -->
+  <div class="stars"></div>
+  
+  <!-- Day elements -->
+  <div class="sun"></div>
+  <div class="day-cloud day-cloud-1"></div>
+  <div class="day-cloud day-cloud-2"></div>
+  <div class="day-cloud day-cloud-3"></div>
+  
+  <div class="shooting-star" id="shooting-star"></div>
+  <div class="twinkle t1"></div>
+  <div class="twinkle t2"></div>
+  <div class="twinkle t3"></div>
+  <div class="twinkle t4"></div>
+  <div class="twinkle t5"></div>
+  <div class="twinkle t6"></div>
+  <div class="twinkle t7"></div>
+  <div class="twinkle t8"></div>
+  <div class="moon" aria-hidden="true"></div>
+  <div class="cloud"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="cloud c4"></div>
+  <div class="dune1"></div>
+  <div class="dune2"></div>
+
+  <!-- Improved Desert Houses with Lights -->
+  <div class="desert-house house-1">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-2">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-3">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-4">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-5">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-6">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-7">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-8">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="desert-house house-9">
+    <div class="house-container">
+      <div class="house-light"></div>
+      <div class="house-body">
+        <div class="house-chimney"></div>
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-door"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app" role="application" aria-label="Prophetic History Crossword Game">
+
+    <!-- HOME PANEL -->
+    <section id="homePanel" class="panel fade-in">
+      <header>
+        <div>
+          <div class="title">Prophetic History Crossword 1</div>
+          <div class="byline">Built with late-night motivation and a heart full of īmān</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button id="startBtn" class="btn">Start Game</button>
+          <button id="infoBtn" class="btn secondary">Information</button>
+        </div>
+      </header>
+
+      <div class="hero" aria-hidden="true">
+        <div class="left">
+          <div class="text-title">Sirah Nabawiyyah — Interactive Crossword</div>
+          <div class="text-sub">Welcome to the first Kultsum's HTML crossword game, this game has been tried and debugged for 19 times. I hope you can answer all the puzzles!!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT (Hidden initially) -->
+    <section id="mainContent" class="panel fade-out" style="display:none;">
+      <header>
+        <div>
+          <div class="title">Prophetic History Crossword 2</div>
+          <div class="byline">Game in progress • Fill in the answers</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button id="backBtn" class="btn secondary">Back to Home</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="left">
+          <div id="grid" aria-label="Crossword grid"></div>
+
+          <div class="controls" style="margin-top:16px">
+            <button id="checkBtn" class="btn">Check Answers</button>
+            <button id="revealBtn" class="btn">Reveal All</button>
+            <button id="resetBtn" class="btn secondary">Reset Game</button>
+            <button id="hintBtn" class="btn secondary">Get Hint</button>
+            <div id="feedback" class="feedback"></div>
+          </div>
+        </div>
+
+        <aside class="right" aria-label="Clues">
+          <div class="clues-title">Clues</div>
+          <div id="clueSections"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- INFO PANEL -->
+    <section id="infoPanel" class="panel fade-out" style="display:none;">
+      <header>
+        <div>
+          <div class="title">Prophetic History Crossword</div>
+          <div class="byline">Information & How to Play</div>
+        </div>
+        <div>
+          <button id="infoBack" class="btn secondary">Back</button>
+        </div>
+      </header>
+
+      <div class="info-content">
+        <div class="info-section">
+          <h4>About</h4>
+          <p>A simple Sirah crossword game.</p>
+          <p>Probably the only Sirah crossword made by an 11th grader.</p>
+        </div>
+
+        <div class="info-section">
+          <h4>How to Play</h4>
+          <p>Tap a box to type.</p>
+          <p>The clue for that box will appear automatically.</p>
+          <p>Fill all the words to finish the puzzle.</p>
+        </div>
+
+        <div class="info-section">
+          <h4>Features</h4>
+          <p>Night to Day Transition</p>
+        </div>
+
+        <div class="info-section">
+          <h4>Credit</h4>
+          <p>Made by: <strong>Kultsum Nurbaiti XIA</strong></p>
+          <p>Date: <strong>9/12/2025</strong></p>
+          <p>Version: <strong>13.2.9</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="tip-container">
+        <div class="tip active">Tip: Start with the shortest words first.</div>
+        <div class="tip">Tip: If you're stuck, switch to another clue.</div>
+        <div class="tip">Tip: Read the clue carefully, sirah details matter!</div>
+        <div class="tip">Tip: Try filling words you already know to unlock new letters.</div>
+        <div class="tip">Tip: Check for names, Sirah clues often use them.</div>
+        <div class="tip">Tip: Use the hint wisely, don't waste it early.</div>
+        <div class="tip">Tip: Re-read the clue if something feels off.</div>
+        <div class="tip">Tip: Some answers come from battles, places, or people—think wide!</div>
+        <div class="tip">Tip: If your answer feels too long, try another spelling.</div>
+        <div class="tip">Tip: Take your time, accuracy beats speed.</div>
+      </div>
+    </footer>
+  </div>
+
+
+  <!-- Result Popup Announcement -->
+  <div id="announcementPopup" class="popup" style="display:none;">
+    <h3 id="popupTitle">Result</h3>
+    <p id="popupMessage">Your answer is correct!</p>
+    <button id="popupClose" class="popup-close">OK</button>
+  </div>
+
+  <!-- Completion Popup -->
+  <div id="completionPopup" class="completion-popup" style="display:none;">
+    <h3>🎉 Congratulations! 🎉</h3>
+    <p>Barakallahufiik! you solved the entire crossword!🎊</p>
+    <div class="completion-buttons">
+      <button id="completionHomeBtn" class="btn">Back to Home</button>
+      <button id="completionNewBtn" class="btn secondary">Play Again</button>
+    </div>
+  </div>
+
+<script>
+/* ---------------- ---- Data ---- ---------------- */
+const CROSSWORD_SETS = new Map([
+
+  // ================= SET 1 =================
+  [1, [
+    { id:1, clue:"The slave who killed Hamza ibn Abdul-Muttalib.", answer:"WAHSHI" },
+    { id:2, clue:"The first king after the Khulafā' al-Rāshidīn.", answer:"MUAWIYAH" },
+    { id:3, clue:"The obligatory charity given before Eid al-Fitr.", answer:"ZAKAT" },
+    { id:4, clue:"The tax paid by non-Muslims living under a Muslim state.", answer:"JIZYAH" },
+    { id:5, clue:"The first battle in which the Messenger of Allah ﷺ did not achieve victory.", answer:"UHUD" },
+    { id:6, clue:"The war between Muawiyah and Ali.", answer:"SIFFIN" },
+    { id:7, clue:"A major peace treaty between the Prophet ﷺ and Quraysh before the Conquest of Makkah.", answer:"HUDAYBIYYAH" },
+    { id:8, clue:"The first caliph who was assassinated.", answer:"UTHMAN" },
+    { id:9, clue:"The conquest of the city of Makkah is called.", answer:"FATH MAKKAH" },
+    { id:10, clue:"The Christian ruler of Abyssinia who protected the early Muslim migrants.", answer:"NAJASHI" },
+    { id:11, clue:"The first-born child of Abu Bakr.", answer:"ASMA" }
+  ]],
+
+  // ================= SET 2 (8 clues) =================
+  [2, [
+    { id:1, clue:"The first revelation received by the Prophet ﷺ.", answer:"IQRA" },
+    { id:2, clue:"The city of Hijrah.", answer:"MADINAH" },
+    { id:3, clue:"The first battle of Islam.", answer:"BADR" },
+    { id:4, clue:"The mountain where revelation began.", answer:"HIRA" },
+    { id:5, clue:"The first martyr in Islam.", answer:"SUMAYYAH" },
+    { id:6, clue:"The night journey of the Prophet ﷺ.", answer:"ISRA" },
+    { id:7, clue:"The ascension to the heavens.", answer:"MIRAJ" },
+    { id:8, clue:"The first mu'adhin of Islam.", answer:"BILAL" }
+  ]],
+
+  // ================= SET 3 (10 clues) =================
+  [3, [
+    { id:1, clue:"The farewell pilgrimage of the Prophet ﷺ.", answer:"HAJJWADA" },
+    { id:2, clue:"The cave used during Hijrah.", answer:"TSUR" },
+    { id:3, clue:"The leader of Quraysh at Uhud.", answer:"ABUSUFYAN" },
+    { id:4, clue:"The brother of Musa who was a prophet.", answer:"HARUN" },
+    { id:5, clue:"The prophet who spoke directly to Allah.", answer:"MUSA" },
+    { id:6, clue:"The wife of Fir'aun who believed.", answer:"ASIYAH" },
+    { id:7, clue:"The prophet swallowed by a whale.", answer:"YUNUS" },
+    { id:8, clue:"The son of Ibrahim who helped build the Ka'bah.", answer:"ISMAIL" },
+    { id:9, clue:"The father of Prophet Yusuf.", answer:"YAQUB" },
+    { id:10, clue:"The prophet known for patience.", answer:"AYYUB" }
+  ]],
+
+  // ================= SET 4 (12 clues) =================
+  [4, [
+    { id:1, clue:"The first caliph of Islam.", answer:"ABUBAKR" },
+    { id:2, clue:"The second caliph of Islam.", answer:"UMAR" },
+    { id:3, clue:"The third caliph of Islam.", answer:"UTHMAN" },
+    { id:4, clue:"The fourth caliph of Islam.", answer:"ALI" },
+    { id:5, clue:"The title of Umar ibn Al-Khattab.", answer:"ALFARUQ" },
+    { id:6, clue:"The mother of the believers, daughter of Abu Bakr.", answer:"AISHAH" },
+    { id:7, clue:"The uncle of the Prophet ﷺ martyred at Uhud.", answer:"HAMZA" },
+    { id:8, clue:"The wife of the Prophet ﷺ known as Ummul Masakin.", answer:"ZAYNAB" },
+    { id:9, clue:"The angel who delivers revelation.", answer:"JIBRIL" },
+    { id:10, clue:"The angel of death.", answer:"IZRAIL" },
+    { id:11, clue:"The angel who blows the trumpet.", answer:"ISRAFIL" },
+    { id:12, clue:"The guardian angel of Hellfire.", answer:"MALIK" }
+  ]],
+
+  // ================= SET 5 (15 clues) =================
+  [5, [
+    { id:1, clue:"The holy book of Islam.", answer:"QURAN" },
+    { id:2, clue:"The direction Muslims pray towards.", answer:"QIBLAH" },
+    { id:3, clue:"The pilgrimage to Makkah.", answer:"HAJJ" },
+    { id:4, clue:"The fasting month.", answer:"RAMADAN" },
+    { id:5, clue:"The declaration of faith.", answer:"SHAHADA" },
+    { id:6, clue:"The five daily prayers.", answer:"SALAH" },
+    { id:7, clue:"The charity pillar of Islam.", answer:"ZAKAT" },
+    { id:8, clue:"The house of Allah in Makkah.", answer:"KABAH" },
+    { id:9, clue:"The well near the Ka'bah.", answer:"ZAMZAM" },
+    { id:10, clue:"The first house built for worship.", answer:"BAITULLAH" },
+    { id:11, clue:"The city of the Prophet ﷺ.", answer:"MADINAH" },
+    { id:12, clue:"The city where Islam began.", answer:"MAKKAH" },
+    { id:13, clue:"The migration of the Prophet ﷺ.", answer:"HIJRAH" },
+    { id:14, clue:"The sermon delivered during Hajj Wada.", answer:"KHUTBAH" },
+    { id:15, clue:"The companions of the Prophet ﷺ.", answer:"SAHABAH" }
+  ]]
+
+]);
+
+
+/* ---------------- Audio helpers ---------------- */
+let audioCtx = null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+function clickSound(){ try{ ensureAudio(); const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type='sine'; o.frequency.value=900; g.gain.value=0.03; o.connect(g); g.connect(audioCtx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06); o.stop(audioCtx.currentTime + 0.07); }catch(e){} }
+
+/* Game sound effects */
+function playCorrectSound(){
+  try{
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach((n,i)=>{
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type='triangle'; o.frequency.value = n;
+      g.gain.value = 0.08;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(now + i*0.15);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + i*0.15 + 0.3);
+      o.stop(now + i*0.15 + 0.31);
+    });
+  }catch(e){}
+}
+
+function playWrongSound(){
+  try{
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type='sawtooth'; o.frequency.value = 220;
+    g.gain.value = 0.05;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(now);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+    o.stop(now + 0.51);
+    
+    // Add a second lower tone
+    const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
+    o2.type='sawtooth'; o2.frequency.value = 164.81;
+    g2.gain.value = 0.03;
+    o2.connect(g2); g2.connect(audioCtx.destination);
+    o2.start(now + 0.1);
+    g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+    o2.stop(now + 0.51);
+  }catch(e){}
+}
+
+function playVictorySound(){
+  try{
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+    notes.forEach((n,i)=>{
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type='triangle'; o.frequency.value = n;
+      g.gain.value = 0.06;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(now + i*0.12);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + i*0.12 + 0.25);
+      o.stop(now + i*0.12 + 0.26);
+    });
+  }catch(e){}
+}
+
+/* Desert ambience - wind sound */
+let ambienceNoise = null;
+function startAmbience(){
+  try{
+    ensureAudio();
+    if(ambienceNoise) return;
+    
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // Create wind-like noise
+    for(let i=0;i<bufferSize;i++){
+      const t = i/audioCtx.sampleRate;
+      const lowFreq = 0.5 * Math.sin(2 * Math.PI * 0.2 * t);
+      const highFreq = 0.5 * (Math.random() * 2 - 1);
+      const envelope = Math.exp(-t * 0.1);
+      data[i] = (lowFreq * 0.7 + highFreq * 0.3) * envelope;
+    }
+    
+    ambienceNoise = audioCtx.createBufferSource();
+    ambienceNoise.buffer = buffer;
+    ambienceNoise.loop = true;
+    
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 300;
+    filter.Q.value = 1;
+    
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0.02; // Very low volume
+    
+    ambienceNoise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    ambienceNoise.start();
+  }catch(e){}
+}
+
+function stopAmbience(){
+  if(ambienceNoise){
+    ambienceNoise.stop();
+    ambienceNoise = null;
+  }
+}
+
+/* Shooting star effect - every 10 seconds */
+function createShootingStar(){
+  const star = document.getElementById('shooting-star');
+  if(!star) return;
+  
+  // Random starting position (top of screen)
+  const startX = Math.random() * 100;
+  const startY = Math.random() * 20;
+  
+  // Random duration and distance
+  const duration = 0.6 + Math.random() * 0.5;
+  const distanceX = 100 + Math.random() * 100;
+  const distanceY = 80 + Math.random() * 80;
+  
+  // Set starting position
+  star.style.left = startX + '%';
+  star.style.top = startY + '%';
+  star.style.opacity = '0';
+  
+  // Animate
+  star.animate([
+    { opacity: 0, transform: 'translate(0, 0) scale(1)' },
+    { opacity: 1, transform: `translate(${distanceX}px, ${distanceY}px) scale(3)` },
+    { opacity: 0, transform: `translate(${distanceX * 1.5}px, ${distanceY * 1.5}px) scale(1)` }
+  ], {
+    duration: duration * 1000,
+    easing: 'ease-out'
+  });
+}
+
+/* Day/Night Transition */
+let dayModeTimer = null;
+
+function startDayTransition(){
+  // Start transition to day after 15 seconds
+  dayModeTimer = setTimeout(() => {
+    document.body.classList.add('day-mode');
+  }, 15000); // 15 seconds
+}
+
+function stopDayTransition(){
+  if(dayModeTimer){
+    clearTimeout(dayModeTimer);
+    dayModeTimer = null;
+  }
+  document.body.classList.remove('day-mode');
+}
+
+/* Tip rotation */
+let currentTipIndex = 0;
+const tips = [
+  "Tip: Start with the shortest words first.",
+  "Tip: If you're stuck, switch to another clue.",
+  "Tip: Read the clue carefully, sirah details matter!",
+  "Tip: Try filling words you already know to unlock new letters.",
+  "Tip: Check for names, Sirah clues often use them.",
+  "Tip: Use the hint wisely, don't waste it early.",
+  "Tip: Re-read the clue if something feels off.",
+  "Tip: Some answers come from battles, places, or people—think wide!",
+  "Tip: If your answer feels too long, try another spelling.",
+  "Tip: Take your time, accuracy beats speed."
+];
+
+function rotateTip(){
+  const tipContainer = document.querySelector('.tip-container');
+  if(!tipContainer) return;
+  
+  const tips = tipContainer.querySelectorAll('.tip');
+  tips.forEach(tip => tip.classList.remove('active'));
+  
+  currentTipIndex = (currentTipIndex + 1) % tips.length;
+  tips[currentTipIndex].classList.add('active');
+}
+
+/* ---------------- Achievement System ---------------- */
+const achievements = {
+  firstWord: false,
+  threeClues: false,
+  noHints: true,
+  fastSolver: false
+};
+
+let hintCount = 0;
+let solvedCount = 0;
+let wordStartTime = null;
+
+function updateAchievements(){
+  const container = document.getElementById('achievementContainer');
+  if(!container) return;
+  
+  // Show container when game starts
+  container.style.display = 'block';
+  
+  // Update each achievement
+  const firstEl = document.getElementById('achievementFirst');
+  const threeEl = document.getElementById('achievementThree');
+  const noHintsEl = document.getElementById('achievementNoHints');
+  const fastEl = document.getElementById('achievementFast');
+  
+  if(firstEl) firstEl.classList.toggle('unlocked', achievements.firstWord);
+  if(threeEl) threeEl.classList.toggle('unlocked', achievements.threeClues);
+  if(noHintsEl) noHintsEl.classList.toggle('unlocked', achievements.noHints && hintCount === 0);
+  if(fastEl) fastEl.classList.toggle('unlocked', achievements.fastSolver);
+}
+
+function checkAchievements(){
+  // Check for three clues solved
+  if(solvedCount >= 3 && !achievements.threeClues){
+    achievements.threeClues = true;
+    updateAchievements();
+  }
+  
+  // Check for no hints used
+  if(hintCount > 0 && achievements.noHints){
+    achievements.noHints = false;
+    updateAchievements();
+  }
+}
+
+/* ---------------- Utility ---------------- */
+function normalize(s){ return s.replace(/\s+/g,'').toUpperCase(); }
+
+/* ---------------- Crossword generator (light, 15x15) ---------------- */
+function generateLayout(clues){
+  const MAX = 15;
+  const grid = Array.from({length:MAX}, () => Array.from({length:MAX}, ()=>null));
+  const words = clues.map(c=>({id:c.id,clue:c.clue,word:normalize(c.answer)}));
+  words.sort((a,b)=>b.word.length - a.word.length);
+
+  const mid = Math.floor(MAX/2);
+  const first = words.shift();
+  const startC = Math.max(1, mid - Math.floor(first.word.length/2));
+  for(let i=0;i<first.word.length;i++) grid[mid][startC+i] = {ch:first.word[i], owners:[first.id]};
+  const placements = [{id:first.id, r:mid, c:startC, dir:'H', word:first.word}];
+
+  function canPlace(word, r, c, dir){
+    if(dir==='H'){
+      if(c<0 || c+word.length>MAX) return false;
+      for(let i=0;i<word.length;i++){
+        const cell = grid[r][c+i];
+        if(cell && cell.ch !== word[i]) return false;
+        if(!cell){ if((r>0 && grid[r-1][c+i]) || (r<MAX-1 && grid[r+1][c+i])) return false; }
+      }
+      if(c>0 && grid[r][c-1]) return false;
+      if(c+word.length<MAX && grid[r][c+word.length]) return false;
+      return true;
+    } else {
+      if(r<0 || r+word.length>MAX) return false;
+      for(let i=0;i<word.length;i++){
+        const cell = grid[r+i][c];
+        if(cell && cell.ch !== word[i]) return false;
+        if(!cell){ if((c>0 && grid[r+i][c-1]) || (c<MAX-1 && grid[r+i][c+1])) return false; }
+      }
+      if(r>0 && grid[r-1][c]) return false;
+      if(r+word.length<MAX && grid[r+word.length][c]) return false;
+      return true;
+    }
+  }
+
+  for(const w of words){
+    let placed=false;
+    for(const p of placements){
+      for(let i=0;i<p.word.length && !placed;i++){
+        for(let j=0;j<w.word.length && !placed;j++){
+          if(p.word[i] !== w.word[j]) continue;
+          let cand=null;
+          if(p.dir==='H'){
+            const r = p.r - j, c = p.c + i;
+            if(canPlace(w.word, r, c, 'V')) cand={r,c,dir:'V'};
+          } else {
+            const r = p.r + i, c = p.c - j;
+            if(canPlace(w.word, r, c, 'H')) cand={r,c,dir:'H'};
+          }
+          if(cand){
+            if(cand.dir==='H'){
+              for(let k=0;k<w.word.length;k++){
+                if(!grid[cand.r][cand.c+k]) grid[cand.r][cand.c+k] = {ch:w.word[k], owners:[]};
+                if(!grid[cand.r][cand.c+k].owners.includes(w.id)) grid[cand.r][cand.c+k].owners.push(w.id);
+              }
+            } else {
+              for(let k=0;k<w.word.length;k++){
+                if(!grid[cand.r+k][cand.c]) grid[cand.r+k][cand.c] = {ch:w.word[k], owners:[]};
+                if(!grid[cand.r+k][cand.c].owners.includes(w.id)) grid[cand.r+k][cand.c].owners.push(w.id);
+              }
+            }
+            placements.push({id:w.id,r:cand.r,c:cand.c,dir:cand.dir,word:w.word});
+            placed=true;
+          }
+        }
+      }
+      if(placed) break;
+    }
+    if(!placed){
+      outer:
+      for(let r=1;r<MAX-1;r++){
+        for(let c=1;c<MAX-1;c++){
+          if(canPlace(w.word,r,c,'H')){
+            for(let k=0;k<w.word.length;k++){
+              if(!grid[r][c+k]) grid[r][c+k] = {ch:w.word[k], owners:[]};
+              if(!grid[r][c+k].owners.includes(w.id)) grid[r][c+k].owners.push(w.id);
+            }
+            placements.push({id:w.id,r,c,dir:'H',word:w.word}); placed=true; break outer;
+          }
+          if(canPlace(w.word,r,c,'V')){
+            for(let k=0;k<w.word.length;k++){
+              if(!grid[r+k][c]) grid[r+k][c] = {ch:w.word[k], owners:[]};
+              if(!grid[r+k][c].owners.includes(w.id)) grid[r+k][c].owners.push(w.id);
+            }
+            placements.push({id:w.id,r,c,dir:'V',word:w.word}); placed=true; break outer;
+          }
+        }
+      }
+    }
+    if(!placed) console.warn('could not place', w.word);
+  }
+
+  // trim to bounding box
+  let minR=MAX, maxR=0, minC=MAX, maxC=0;
+  for(let r=0;r<MAX;r++) for(let c=0;c<MAX;c++) if(grid[r][c]) { minR=Math.min(minR,r); maxR=Math.max(maxR,r); minC=Math.min(minC,c); maxC=Math.max(maxC,c); }
+  minR = Math.max(0, minR-1); minC = Math.max(0, minC-1); maxR=Math.min(MAX-1, maxR+1); maxC=Math.min(MAX-1, maxC+1);
+  const H = maxR-minR+1, W = maxC-minC+1;
+  const final = Array.from({length:H}, (_,rr)=>Array.from({length:W}, (_,cc)=>{
+    const v = grid[minR+rr][minC+cc];
+    return v ? { ch:v.ch, owners:v.owners } : null;
+  }));
+  const mapping = {};
+  for(const p of placements) mapping[p.id] = { r:p.r - minR, c:p.c - minC, dir:p.dir, word:p.word };
+  return { grid: final, H, W, mapping, placements };
+}
+
+/* ---------------- Render & interactions ---------------- */
+const gridEl = document.getElementById('grid');
+const clueSectionsEl = document.getElementById('clueSections');
+const homePanel = document.getElementById('homePanel');
+const mainContent = document.getElementById('mainContent');
+const infoPanel = document.getElementById('infoPanel');
+const backBtn = document.getElementById('backBtn');
+const startBtn = document.getElementById('startBtn');
+const infoBtn = document.getElementById('infoBtn');
+const infoBack = document.getElementById('infoBack');
+const checkBtn = document.getElementById('checkBtn');
+const completionPopup = document.getElementById('completionPopup');
+const completionHomeBtn = document.getElementById('completionHomeBtn');
+const completionNewBtn = document.getElementById('completionNewBtn');
+
+/* Popup Elements */
+const announcementPopup = document.getElementById('announcementPopup');
+const popupTitle = document.getElementById('popupTitle');
+const popupMessage = document.getElementById('popupMessage');
+const popupClose = document.getElementById('popupClose');
+
+let state = { layout:null, activeClue:null, activeDir:null, cellToClues:{} };
+
+/* Add Enter key handler for popups */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    // Check if announcement popup is visible
+    if (announcementPopup.style.display === 'block') {
+      clickSound();
+      announcementPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+      setTimeout(() => {
+        announcementPopup.style.display = 'none';
+        announcementPopup.style.animation = '';
+      }, 300);
+      e.preventDefault();
+    }
+    // Check if completion popup is visible
+    if (completionPopup.style.display === 'block') {
+      clickSound();
+      completionPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+      setTimeout(() => {
+        completionPopup.style.display = 'none';
+        completionPopup.style.animation = '';
+        showHome();
+      }, 300);
+      e.preventDefault();
+    }
+  }
+});
+
+/* Show popup announcement with smooth transitions */
+function showAnnouncement(isCorrect, message) {
+  clickSound();
+  
+  // Add fade-out animation class first if popup is already showing
+  if (announcementPopup.style.display === 'block') {
+    announcementPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+    setTimeout(() => {
+      announcementPopup.style.display = 'none';
+      announcementPopup.style.animation = '';
+      showAnnouncementFinal(isCorrect, message);
+    }, 300);
+  } else {
+    showAnnouncementFinal(isCorrect, message);
+  }
+}
+
+function showAnnouncementFinal(isCorrect, message) {
+  if (isCorrect) {
+    announcementPopup.className = 'popup correct';
+    popupTitle.textContent = 'Correct!';
+    popupMessage.textContent = message;
+    playCorrectSound();
+  } else {
+    announcementPopup.className = 'popup wrong';
+    popupTitle.textContent = 'Incorrect';
+    popupMessage.textContent = message;
+    playWrongSound();
+  }
+  
+  // Reset animation
+  announcementPopup.style.animation = 'popupIn 0.3s ease-out forwards';
+  announcementPopup.style.display = 'block';
+  
+  // Focus the close button for keyboard accessibility
+  setTimeout(() => {
+    popupClose.focus();
+  }, 100);
+  
+  // Auto-close after 2 seconds for correct answers
+  if (isCorrect) {
+    setTimeout(() => {
+      if (announcementPopup.style.display === 'block') {
+        announcementPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+        setTimeout(() => {
+          announcementPopup.style.display = 'none';
+          announcementPopup.style.animation = '';
+        }, 300);
+      }
+    }, 2000);
+  }
+}
+
+/* Show completion popup */
+function showCompletionPopup() {
+  playVictorySound();
+  completionPopup.style.display = 'block';
+  completionPopup.style.animation = 'popupIn 0.3s ease-out forwards';
+  
+  // Focus the first button for keyboard accessibility
+  setTimeout(() => {
+    completionHomeBtn.focus();
+  }, 100);
+}
+
+/* Close popup with Enter key support */
+popupClose.addEventListener('click', () => {
+  clickSound();
+  announcementPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+  setTimeout(() => {
+    announcementPopup.style.display = 'none';
+    announcementPopup.style.animation = '';
+  }, 300);
+});
+
+// Add keydown listener for the popup itself
+announcementPopup.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === 'Escape') {
+    clickSound();
+    announcementPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+    setTimeout(() => {
+      announcementPopup.style.display = 'none';
+      announcementPopup.style.animation = '';
+    }, 300);
+    e.preventDefault();
+  }
+});
+
+/* Completion popup handlers with smooth transitions */
+completionHomeBtn.addEventListener('click', () => {
+  clickSound();
+  completionPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+  setTimeout(() => {
+    completionPopup.style.display = 'none';
+    completionPopup.style.animation = '';
+    showHome();
+  }, 300);
+});
+
+completionNewBtn.addEventListener('click', () => {
+  clickSound();
+  completionPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+  setTimeout(() => {
+    completionPopup.style.display = 'none';
+    completionPopup.style.animation = '';
+    buildUI();
+  }, 300);
+});
+
+// Add keyboard support for completion popup
+completionPopup.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    clickSound();
+    completionPopup.style.animation = 'popupOut 0.3s ease-in forwards';
+    setTimeout(() => {
+      completionPopup.style.display = 'none';
+      completionPopup.style.animation = '';
+      showHome();
+    }, 300);
+    e.preventDefault();
+  }
+});
+
+/* Smooth scroll to active word */
+function scrollToActiveWord(){
+  if(!state.activeClue || !state.layout) return;
+  
+  const m = state.layout.mapping[state.activeClue];
+  if(!m) return;
+  
+  // Calculate center of the word
+  const midIndex = Math.floor(m.word.length / 2);
+  const centerR = m.r + (m.dir==='V'?midIndex:0);
+  const centerC = m.c + (m.dir==='H'?midIndex:0);
+  
+  // Get cell element
+  const cell = document.querySelector(`.cell[data-r="${centerR}"][data-c="${centerC}"]`);
+  if(!cell) return;
+  
+  // Calculate position relative to grid
+  const gridRect = gridEl.getBoundingClientRect();
+  const cellRect = cell.getBoundingClientRect();
+  
+  // Calculate scroll needed
+  const targetScrollLeft = gridEl.scrollLeft + (cellRect.left - gridRect.left) - (gridEl.clientWidth / 2) + (cellRect.width / 2);
+  const targetScrollTop = gridEl.scrollTop + (cellRect.top - gridRect.top) - (gridEl.clientHeight / 2) + (cellRect.height / 2);
+  
+  // Smooth scroll
+  gridEl.scrollTo({
+    left: targetScrollLeft,
+    top: targetScrollTop,
+    behavior: 'smooth'
+  });
+}
+
+/* Scroll clue into view */
+function scrollClueIntoView(clueId) {
+  const clueElement = document.querySelector(`li[data-id="${clueId}"]`);
+  if (!clueElement) return;
+  
+  // Find which section (across or down) the clue belongs to
+  const acrossSection = document.querySelector('#acrossList');
+  const downSection = document.querySelector('#downList');
+  
+  let container = null;
+  if (clueElement.parentElement === acrossSection) {
+    container = acrossSection;
+  } else if (clueElement.parentElement === downSection) {
+    container = downSection;
+  }
+  
+  if (container) {
+    // Calculate position
+    const containerRect = container.getBoundingClientRect();
+    const clueRect = clueElement.getBoundingClientRect();
+    
+    // Check if clue is not fully visible
+    if (clueRect.top < containerRect.top || clueRect.bottom > containerRect.bottom) {
+      // Scroll to make the clue centered in the container
+      clueElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }
+}
+
+let CLUES = [];
+
+/* build UI */
+function buildUI() {
+    const keys = Array.from(CROSSWORD_SETS.keys());
+    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+    CLUES = CROSSWORD_SETS.get(randomKey);
+
+    
+  const layout = generateLayout(CLUES);
+  state.layout = layout;
+  state.cellToClues = {};
+  gridEl.innerHTML = '';
+
+  homePanel.style.display = "none";
+  mainContent.style.display = "block";
+
+
+  const frag = document.createDocumentFragment();
+  for(let r=0;r<layout.H;r++){
+    const row = document.createElement('div'); row.className='row';
+    for(let c=0;c<layout.W;c++){
+      const cellData = layout.grid[r][c];
+      const cell = document.createElement('div'); cell.className = 'cell' + (cellData? '' : ' empty');
+      cell.dataset.r = r; cell.dataset.c = c;
+      if(cellData){
+        const input = document.createElement('input');
+        input.maxLength = 1;
+        input.dataset.r = r; input.dataset.c = c;
+        input.addEventListener('input', onCellInput, {passive:true});
+        input.addEventListener('keydown', onCellKeyDown);
+        input.addEventListener('focus', onCellFocus);
+        // when user types, remove correct/wrong classes for that cell
+        input.addEventListener('input', ()=>{ 
+          const p = input.parentElement; 
+          if(p){ 
+            p.classList.remove('correct','wrong'); 
+            checkWordCompletion(); // Check if a word is completed
+          } 
+        });
+        cell.appendChild(input);
+
+        // number if any mapping starts here
+        for(const id in layout.mapping){
+          const m = layout.mapping[id];
+          if(m.r == r && m.c == c){
+            const num = document.createElement('div'); num.className='num'; num.textContent = id;
+            cell.appendChild(num); break;
+          }
+        }
+
+        // map cell->owners
+        for(const id of cellData.owners || []) {
+          const key = r+','+c;
+          if(!state.cellToClues[key]) state.cellToClues[key] = [];
+          if(!state.cellToClues[key].includes(id)) state.cellToClues[key].push(id);
+        }
+      }
+      row.appendChild(cell);
+    }
+    frag.appendChild(row);
+  }
+  gridEl.appendChild(frag);
+
+  // Separate Across and Down clues
+  clueSectionsEl.innerHTML = '';
+  
+  // Across clues
+  const acrossSection = document.createElement('div');
+  acrossSection.className = 'clue-section';
+  acrossSection.innerHTML = '<div class="clue-section-title">Across</div><ul class="clue-list" id="acrossList"></ul>';
+  clueSectionsEl.appendChild(acrossSection);
+  
+  // Down clues
+  const downSection = document.createElement('div');
+  downSection.className = 'clue-section';
+  downSection.innerHTML = '<div class="clue-section-title">Down</div><ul class="clue-list" id="downList"></ul>';
+  clueSectionsEl.appendChild(downSection);
+  
+  const acrossList = document.getElementById('acrossList');
+  const downList = document.getElementById('downList');
+  
+  // Sort clues by direction
+  const acrossClues = [];
+  const downClues = [];
+  
+  for(const c of CLUES){
+    const m = layout.mapping[c.id];
+    if(m && m.dir === 'H'){
+      acrossClues.push(c);
+    } else if(m && m.dir === 'V'){
+      downClues.push(c);
+    }
+  }
+  
+  // Sort by clue number
+  acrossClues.sort((a,b) => a.id - b.id);
+  downClues.sort((a,b) => a.id - b.id);
+  
+  // Render across clues
+  for(const c of acrossClues){
+    const li = document.createElement('li'); li.dataset.id = c.id;
+    li.innerHTML = `<div class="clue-num">${c.id}</div><div style="flex:1">${c.clue}</div>`;
+    li.addEventListener('click', ()=>{ clickSound(); selectClue(c.id); });
+    acrossList.appendChild(li);
+  }
+  
+  // Render down clues
+  for(const c of downClues){
+    const li = document.createElement('li'); li.dataset.id = c.id;
+    li.innerHTML = `<div class="clue-num">${c.id}</div><div style="flex:1">${c.clue}</div>`;
+    li.addEventListener('click', ()=>{ clickSound(); selectClue(c.id); });
+    downList.appendChild(li);
+  }
+
+  state.activeClue = null; state.activeDir = null;
+  updateClueHighlights();
+  
+  // Reset achievements
+  solvedCount = 0;
+  hintCount = 0;
+  wordStartTime = null;
+  achievements.firstWord = false;
+  achievements.threeClues = false;
+  achievements.noHints = true;
+  achievements.fastSolver = false;
+  updateAchievements();
+}
+
+/* Check if a word is completed and show announcement */
+function checkWordCompletion() {
+  if (!state.activeClue || !state.layout) return;
+  
+  const m = state.layout.mapping[state.activeClue];
+  if (!m) return;
+  
+  const sol = normalize(CLUES.find(c => c.id === state.activeClue)?.answer || '');
+  let got = '';
+  let allFilled = true;
+  
+  for(let i=0;i<sol.length;i++){
+    const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+    const val = readCell(rr, cc);
+    got += val || ' ';
+    if (!val) allFilled = false;
+  }
+  
+  // Only check if all cells are filled
+  if (allFilled) {
+    if (got === sol) {
+      showAnnouncement(true, `Word "${sol}" is correct! 🎉`);
+      
+      // Mark cells as correct
+      for(let i=0;i<sol.length;i++){
+        const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+        const cell = document.querySelector(`.cell[data-r="${rr}"][data-c="${cc}"]`);
+        if(cell) cell.classList.add('correct');
+      }
+      
+      // Update achievements
+      solvedCount++;
+      if(!achievements.firstWord){
+        achievements.firstWord = true;
+      }
+      
+      // Check fast solver
+      if(wordStartTime){
+        const solveTime = (Date.now() - wordStartTime) / 1000;
+        if(solveTime < 5 && !achievements.fastSolver){
+          achievements.fastSolver = true;
+        }
+        wordStartTime = null;
+      }
+      
+      checkAchievements();
+      updateAchievements();
+    } else {
+      showAnnouncement(false, `Word is incorrect. Try again!`);
+      
+      // Mark cells as wrong
+      for(let i=0;i<sol.length;i++){
+        const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+        const cell = document.querySelector(`.cell[data-r="${rr}"][data-c="${cc}"]`);
+        const val = readCell(rr, cc);
+        if(cell && val && val !== sol[i]) {
+          cell.classList.add('wrong');
+        }
+      }
+    }
+  }
+}
+
+/* selection / highlight */
+function selectClue(id){
+  state.activeClue = id;
+  const m = state.layout.mapping[id];
+  state.activeDir = m.dir === 'H' ? 'H' : 'V';
+  const first = document.querySelector(`input[data-r="${m.r}"][data-c="${m.c}"]`);
+  if(first) {
+    first.focus();
+    wordStartTime = Date.now();
+  }
+  highlightActiveWord(); 
+  updateClueHighlights();
+  scrollToActiveWord();
+  
+  // Scroll the clue into view automatically
+  scrollClueIntoView(id);
+}
+
+function updateClueHighlights(){
+  // Update both across and down lists
+  const acrossNodes = document.querySelectorAll('#acrossList li');
+  const downNodes = document.querySelectorAll('#downList li');
+  
+  acrossNodes.forEach(li=>{
+    if(parseInt(li.dataset.id) === state.activeClue){ 
+      li.classList.add('active'); 
+      li.classList.remove('dim'); 
+    } else { 
+      li.classList.remove('active'); 
+      li.classList.add('dim'); 
+    }
+  });
+  
+  downNodes.forEach(li=>{
+    if(parseInt(li.dataset.id) === state.activeClue){ 
+      li.classList.add('active'); 
+      li.classList.remove('dim'); 
+    } else { 
+      li.classList.remove('active'); 
+      li.classList.add('dim'); 
+    }
+  });
+  
+  if(state.activeClue === null) {
+    acrossNodes.forEach(li=> li.classList.remove('dim'));
+    downNodes.forEach(li=> li.classList.remove('dim'));
+  }
+}
+
+function highlightActiveWord(){
+  document.querySelectorAll('.cell').forEach(cell=>{ cell.classList.remove('highlight','first-cell'); });
+  if(!state.activeClue) return;
+  const m = state.layout.mapping[state.activeClue];
+  if(!m) return;
+  const len = m.word.length;
+  for(let i=0;i<len;i++){
+    const r = m.r + (m.dir==='V'?i:0);
+    const c = m.c + (m.dir==='H'?i:0);
+    const cell = document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+    if(cell) cell.classList.add('highlight');
+    if(i===0 && cell) cell.classList.add('first-cell');
+  }
+}
+
+/* focus & typing handlers */
+function onCellFocus(e){
+  clickSound();
+  const input = e.target;
+  const r = parseInt(input.dataset.r), c = parseInt(input.dataset.c);
+  const key = r+','+c;
+  const owners = state.cellToClues[key] || [];
+  if(owners.length === 1){
+    state.activeClue = owners[0];
+    state.activeDir = state.layout.mapping[owners[0]].dir === 'H' ? 'H' : 'V';
+  } else if(owners.length > 1){
+    if(state.activeClue && owners.includes(state.activeClue)) {
+      // keep it
+    } else {
+      const horiz = owners.find(id => state.layout.mapping[id] && state.layout.mapping[id].dir==='H');
+      state.activeClue = horiz || owners[0];
+      state.activeDir = state.layout.mapping[state.activeClue].dir === 'H' ? 'H' : 'V';
+    }
+  } else {
+    state.activeClue = null; state.activeDir = null;
+  }
+  highlightActiveWord(); updateClueHighlights();
+  scrollToActiveWord();
+  scrollClueIntoView(state.activeClue);
+}
+
+function onCellInput(e){
+  const input = e.target;
+  input.value = (input.value||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,1);
+  clickSound();
+  const r = parseInt(input.dataset.r), c = parseInt(input.dataset.c);
+  if(!state.activeClue){
+    const key = r+','+c; const owners = state.cellToClues[key] || [];
+    if(owners.length){ state.activeClue = owners[0]; state.activeDir = state.layout.mapping[owners[0]].dir; highlightActiveWord(); updateClueHighlights(); }
+  }
+  if(state.activeDir === 'H'){
+    const next = document.querySelector(`input[data-r="${r}"][data-c="${c+1}"]`);
+    if(next && input.value) next.focus();
+  } else if(state.activeDir === 'V'){
+    const next = document.querySelector(`input[data-r="${r+1}"][data-c="${c}"]`);
+    if(next && input.value) next.focus();
+  } else {
+    const nr = document.querySelector(`input[data-r="${r}"][data-c="${c+1}"]`) || document.querySelector(`input[data-r="${r+1}"][data-c="${c}"]`);
+    if(nr && input.value) nr.focus();
+  }
+}
+
+function onCellKeyDown(e){
+  const input = e.target;
+  const r = parseInt(input.dataset.r), c = parseInt(input.dataset.c);
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); focusCell(r,c-1); }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); focusCell(r,c+1); }
+  if(e.key === 'ArrowUp'){ e.preventDefault(); focusCell(r-1,c); }
+  if(e.key === 'ArrowDown'){ e.preventDefault(); focusCell(r+1,c); }
+  if(e.key === 'Backspace' && !input.value){
+    if(state.activeDir === 'H'){ focusCell(r,c-1); }
+    else if(state.activeDir === 'V'){ focusCell(r-1,c); }
+    else focusCell(r,c-1);
+  }
+}
+
+function focusCell(r,c){ const el=document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); if(el) el.focus(); }
+
+/* read / write helpers */
+function readCell(r,c){ const el=document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); return el ? el.value||'' : ''; }
+function writeCell(r,c,ch){ const el=document.querySelector(`input[data-r="${r}"][data-c="${c}"]`); if(el){ el.value = ch; } }
+
+/* ---------------- Controls & transitions ---------------- */
+function showMainPanel(){
+  homePanel.classList.remove('fade-in'); homePanel.classList.add('fade-out');
+  mainContent.style.display = 'block';
+  setTimeout(()=>{ mainContent.classList.remove('fade-out'); mainContent.classList.add('fade-in'); }, 20);
+  
+  // Start game features
+  startAmbience();
+  
+  // Start shooting stars every 10 seconds
+  setInterval(createShootingStar, 10000);
+  
+  // Start tip rotation
+  setInterval(rotateTip, 30000);
+  
+  // Start day transition after 15 seconds
+  startDayTransition();
+  
+  // Create first shooting star after 1 second
+  setTimeout(createShootingStar, 1000);
+}
+
+function showHome(){
+     homePanel.style.display = "block";
+  mainContent.style.display = "none";
+  mainContent.classList.remove('fade-in'); mainContent.classList.add('fade-out');
+  setTimeout(()=>{ mainContent.style.display = 'none'; homePanel.classList.remove('fade-out'); homePanel.classList.add('fade-in'); }, 250);
+  
+  // Stop ambience when returning home
+  stopAmbience();
+  
+  // Reset day transition
+  stopDayTransition();
+}
+
+/* wiring */
+startBtn.addEventListener('click', ()=>{ clickSound(); buildUI(); showMainPanel(); window.scrollTo({top:0,behavior:'smooth'}); });
+backBtn.addEventListener('click', ()=>{ clickSound(); showHome(); });
+infoBtn.addEventListener('click', ()=>{ clickSound(); infoPanel.style.display = 'block'; infoPanel.classList.remove('fade-out'); infoPanel.classList.add('fade-in'); mainContent.style.display='none'; homePanel.classList.remove('fade-in'); homePanel.classList.add('fade-out'); });
+infoBack.addEventListener('click', ()=>{ clickSound(); infoPanel.classList.remove('fade-in'); infoPanel.classList.add('fade-out'); setTimeout(()=>{ infoPanel.style.display='none'; homePanel.classList.remove('fade-out'); homePanel.classList.add('fade-in'); },250); });
+
+/* Check: play applause then color each letter per A (green/red) */
+checkBtn.addEventListener('click', ()=>{ try{ ensureAudio(); playCorrectSound(); }catch(e){} setTimeout(()=>{ markLetters(); checkSolved(); }, 220); });
+
+document.getElementById('revealBtn').addEventListener('click', ()=>{ clickSound(); revealAll(); });
+document.getElementById('resetBtn').addEventListener('click', ()=>{ clickSound(); resetAll(); });
+document.getElementById('hintBtn').addEventListener('click', ()=>{ clickSound(); revealOneLetter(); });
+
+/* mark letters per-letter correct/wrong (A) */
+function markLetters(){
+  const layout = state.layout;
+  if(!layout) return;
+  for(const c of CLUES){
+    const m = layout.mapping[c.id]; if(!m) continue;
+    const sol = normalize(c.answer);
+    for(let i=0;i<sol.length;i++){
+      const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+      const cell = document.querySelector(`.cell[data-r="${rr}"][data-c="${cc}"]`);
+      const val = readCell(rr,cc);
+      if(!cell) continue;
+      cell.classList.remove('correct','wrong');
+      if(val === '') continue;
+      if(val === sol[i]) cell.classList.add('correct');
+      else cell.classList.add('wrong');
+    }
+  }
+}
+
+/* check solved and show completion popup if all words correct */
+function checkSolved(){
+  const layout = state.layout;
+  let correctCount = 0; let total = CLUES.length;
+  for(const c of CLUES){
+    const m = layout.mapping[c.id]; if(!m) continue;
+    const sol = normalize(c.answer);
+    let got = '';
+    for(let i=0;i<sol.length;i++){
+      const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+      got += readCell(rr,cc) || ' ';
+    }
+    if(got === sol){
+      correctCount++;
+      // lock letters visually (but keep green)
+      for(let i=0;i<sol.length;i++){
+        const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+        const el = document.querySelector(`input[data-r="${rr}"][data-c="${cc}"]`);
+        if(el){ el.disabled = true; el.style.color = '#064b05'; }
+      }
+      const node = document.querySelector(`li[data-id="${c.id}"]`); 
+      if(node) node.style.opacity = 0.6;
+    }
+  }
+  const fb = document.getElementById('feedback');
+  fb.textContent = `Solved ${correctCount}/${total}`;
+  if(correctCount === total){ 
+    fb.textContent = '🎉 Barakallahufiik! you solved the entire crossword!🎊'; 
+    
+    // Automatically show completion popup after a short delay
+    setTimeout(() => {
+      showCompletionPopup();
+    }, 500);
+  }
+}
+
+/* reveal, reset, hint (same functionality, names updated) */
+function revealAll(){
+  const layout = state.layout;
+  for(const c of CLUES){
+    const m = layout.mapping[c.id]; if(!m) continue;
+    const sol = normalize(c.answer);
+    for(let i=0;i<sol.length;i++){
+      const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+      writeCell(rr,cc, sol[i]);
+      const el = document.querySelector(`input[data-r="${rr}"][data-c="${cc}"]`); if(el) el.disabled = true;
+      const cell = document.querySelector(`.cell[data-r="${rr}"][data-c="${cc}"]`); if(cell){ cell.classList.remove('wrong'); cell.classList.add('correct'); }
+    }
+    const node = document.querySelector(`li[data-id="${c.id}"]`); if(node) node.style.opacity = 0.6;
+  }
+  document.getElementById('feedback').textContent = 'Solution revealed.';
+}
+
+function resetAll(){
+  document.querySelectorAll('input').forEach(i=>{ i.value=''; i.disabled=false; i.style.color=''; });
+  document.querySelectorAll('.cell').forEach(c=>{ c.classList.remove('correct','wrong'); });
+  document.querySelectorAll('.clue-list li').forEach(n=> n.style.opacity = 1);
+  document.getElementById('feedback').textContent = '';
+  state.activeClue = null; state.activeDir = null; updateClueHighlights(); highlightActiveWord();
+  
+  // Reset achievements
+  solvedCount = 0;
+  hintCount = 0;
+  achievements.firstWord = false;
+  achievements.threeClues = false;
+  achievements.noHints = true;
+  achievements.fastSolver = false;
+  updateAchievements();
+}
+
+function revealOneLetter(){
+  hintCount++;
+  achievements.noHints = false;
+  updateAchievements();
+  
+  const layout = state.layout; const candidates = [];
+  for(const c of CLUES){
+    const m = layout.mapping[c.id]; if(!m) continue;
+    const sol = normalize(c.answer);
+    for(let i=0;i<sol.length;i++){
+      const rr = m.r + (m.dir==='V'?i:0), cc = m.c + (m.dir==='H'?i:0);
+      const cur = readCell(rr,cc);
+      if(cur !== sol[i]) candidates.push({r:rr,c:cc,ch:sol[i]});
+    }
+  }
+  if(!candidates.length){ document.getElementById('feedback').textContent = 'No letters left to reveal.'; return; }
+  const pick = candidates[Math.floor(Math.random()*candidates.length)];
+  writeCell(pick.r,pick.c,pick.ch);
+  const el = document.querySelector(`input[data-r="${pick.r}"][data-c="${pick.c}"]`);
+  if(el){ 
+    el.focus(); 
+    el.style.color = '#064b05'; 
+    const parent = el.parentElement; 
+    if(parent){ 
+      parent.classList.remove('wrong'); 
+      parent.classList.add('correct'); 
+    } 
+  }
+}
+
+/* initialize: nothing heavy until Start clicked */
+</script>
+</body>
+</html>
